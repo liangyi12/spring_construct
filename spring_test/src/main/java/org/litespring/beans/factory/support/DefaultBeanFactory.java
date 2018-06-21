@@ -5,22 +5,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanCreationException;
-import org.litespring.beans.factory.BeanFactory;
+import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.util.ClassUtils;
-/*问题，为什么接口BeanDenifitionRegistry没有DefaultBeanDenifitionRegistry的实现，而是由DefaultBeanFactory来实现这个接口
- * 这样不会违背单一职责吗，DefaultBeanFactory的职责是什么？？
- **/
-public class DefaultBeanFactory implements  BeanFactory, BeanDefinitionRegistry{
+
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
+	implements  ConfigurableBeanFactory, BeanDefinitionRegistry{
 	
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
+	private ClassLoader classLoader;
 
 	public DefaultBeanFactory() {
 	}
 
-	public void registerBeanDefinition(String beanId,
-			BeanDefinition beanDefinition) {
+	public void registerBeanDefinition(String beanId, BeanDefinition beanDefinition) {
 		this.beanDefinitionMap.put(beanId, beanDefinition);
-		
 	}
 	
 	public BeanDefinition getBeanDefinition(String beanId) {
@@ -30,9 +28,22 @@ public class DefaultBeanFactory implements  BeanFactory, BeanDefinitionRegistry{
 	public Object getBean(String beanId) {
 		BeanDefinition beanDefinition = getBeanDefinition(beanId);
 		if(beanDefinition == null) {
-			throw new BeanCreationException("beanDefinition does not exist");
+			throw new BeanCreationException(beanId, "beanDefinition does not exist");
 		}
-		ClassLoader cl = ClassUtils.getDefaultClassLoader();
+		
+		if(beanDefinition.isSingleton()){
+			Object bean = this.getSingleton(beanId);
+			if(bean == null){
+				bean = createBean(beanDefinition);
+				this.registerSingleton(beanId, bean);
+			}
+			return bean;
+		}
+		return createBean(beanDefinition);
+	}
+
+	public Object createBean(BeanDefinition beanDefinition) {
+		ClassLoader cl = this.getBeanClassLoader();
 		String beanClassName = beanDefinition.getBeanClassName();
 		try {
 			Class c = cl.loadClass(beanClassName);
@@ -40,6 +51,14 @@ public class DefaultBeanFactory implements  BeanFactory, BeanDefinitionRegistry{
 		} catch (Exception e) {
 			throw new BeanCreationException("create bean for " + beanClassName + "failed" , e);
 		}
+	}
+
+	public void setBeanClassLoader(ClassLoader classLoader) {
+		this.classLoader = classLoader;
+	}
+
+	public ClassLoader getBeanClassLoader() {
+		return (this.classLoader != null ? this.classLoader : ClassUtils.getDefaultClassLoader());
 	}
 
 	
