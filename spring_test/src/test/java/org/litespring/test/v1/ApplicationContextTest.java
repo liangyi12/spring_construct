@@ -20,7 +20,7 @@ public class ApplicationContextTest {
 	@Test
 	public void testFileGetBean() {
 		//相对路径：相对的是本项目的路径
-		ApplicationContext ctx = new FileSystemXmlApplicationContext("..\\..\\..\\petstore-v2.xml");
+		ApplicationContext ctx = new FileSystemXmlApplicationContext("./src/test/resources/petstore-v1.xml");
 		PetStoreService petStoreService = (PetStoreService)ctx.getBean("petStore");
 		assertNotNull(petStoreService);
 	}
