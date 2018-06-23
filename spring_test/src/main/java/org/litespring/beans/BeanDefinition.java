@@ -1,4 +1,7 @@
 package org.litespring.beans;
+
+import java.util.List;
+
 //接口变量默认为public static final， 方法默认为public abstract
 //bean定义接口
 public interface BeanDefinition {
@@ -9,10 +12,15 @@ public interface BeanDefinition {
 	
 	public boolean isSingleton();
 	public boolean isPrototype();
+	
 	String getScope();
 	void setScope(String scope);
 
 	String getBeanClassName();
+	
+	List<Property> getProperties();
+	
+	void setProperties(List<Property> properties);
 
 	
 }

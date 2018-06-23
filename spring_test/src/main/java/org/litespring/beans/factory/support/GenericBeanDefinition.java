@@ -1,6 +1,9 @@
 package org.litespring.beans.factory.support;
 
+import java.util.List;
+
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.Property;
 /**
  * 
  * bean定义实现类
@@ -17,6 +20,8 @@ public class GenericBeanDefinition implements BeanDefinition {
 	
 	/**scope：bean的作用域，对应xml配置中的<bean scope>，值为singleton或空时表示为单例模式，prototype时为原型模式 */
 	private String scope = SCOPE_DEFAULT;
+	
+	private List<Property> properties;
 	
 	/**构造函数*/
 	public GenericBeanDefinition(String id, String beanClassName) {
@@ -45,6 +50,15 @@ public class GenericBeanDefinition implements BeanDefinition {
 
 	public void setScope(String scope) {
 		this.scope = scope;
+	}
+
+	public List<Property> getProperties() {
+		return this.properties;
+	}
+
+	public void setProperties(List<Property> properties) {
+		this.properties = properties;
+		
 	}
 
 }
