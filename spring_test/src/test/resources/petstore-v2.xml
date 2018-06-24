@@ -5,9 +5,9 @@
      http://www.springframework.org/schema/beans/spring-beans.xsd">
      
      <bean id="petStore" class="org.litespring.service.v2.PetStoreService">
-        <!-- <property name="accountDao" ref="accountDao"/>
-        <property name="itemDao" ref="itemDao" /> -->
-        <property name="test" value="test" /> 
+        <property name="accountDao" ref="accountDao"/>
+        <property name="itemDao" ref="itemDao" />
+        <!-- <property name="test" value="test" />  -->
         
      </bean>
      
