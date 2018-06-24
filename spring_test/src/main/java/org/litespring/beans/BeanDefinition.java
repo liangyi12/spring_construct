@@ -18,9 +18,8 @@ public interface BeanDefinition {
 
 	String getBeanClassName();
 	
-	List<Property> getProperties();
+	List<PropertyValue> getPropertyValues();
 	
-	void setProperties(List<Property> properties);
 
 	
 }
