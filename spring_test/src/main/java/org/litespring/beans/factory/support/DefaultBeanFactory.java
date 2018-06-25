@@ -109,6 +109,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 				for(PropertyDescriptor pd : pds) {
 					if(pd.getName().equals(propertyName)) {
 						Object convertValue = convert.convertIfNecessary(resolveValue, pd.getPropertyType());
+						//pd.getWriteMethod() 得到属性的set方法
 						pd.getWriteMethod().invoke(bean, convertValue);
 					}
 				}

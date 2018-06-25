@@ -86,6 +86,11 @@ public class XmlBeandefinitionReader {
 		
 	}
 	
+	/**
+	 * 解析bean元素的property子元素
+	 * @param beanEle
+	 * @param bd
+	 */
 	public void ParsePropertyElement(Element beanEle, BeanDefinition bd) {
 		Iterator iter = beanEle.elementIterator();
 		while(iter.hasNext()) {
@@ -105,7 +110,13 @@ public class XmlBeandefinitionReader {
 		}
 	}
 	
-	
+	/**
+	 * 解析property的属性
+	 * @param e
+	 * @param bd
+	 * @param propertyName
+	 * @return
+	 */
 	private Object parsePropertyValue(Element e, BeanDefinition bd,	String propertyName) {
 		String elementName = (propertyName != null ?
 				"<property> element for property '" + propertyName + "'" :
@@ -127,7 +138,7 @@ public class XmlBeandefinitionReader {
 		}
 	}
 	
-	//我写代码喜欢都揉搓在一起写，之后修改的时候会很乱。而spring的方法做到了单一职责，每个方法只处理一个事
+	//我写代码喜欢都揉搓在一起写，之后修改的时候会很乱。而spring的方法做到了单一职责，每个方法只处理一个事--无用，我写的，一个粗糙的警示
 	private List<PropertyValue> handleProperty(List<Element> pro_eles) {
 		List<PropertyValue> properties = new ArrayList<PropertyValue>();
 		if(!pro_eles.isEmpty()){

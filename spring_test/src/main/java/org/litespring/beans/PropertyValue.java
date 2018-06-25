@@ -5,7 +5,7 @@ public class PropertyValue {
 	//假设场景：在spring框架把所有的类都注入之后，程序使用之前，有人从beandefinition中得到了某个bean的属性列表，修改了其中一个，如果修改的是name的话，
 	//使用时会找不到想要的属性，如果修改的是value的话，会导致拿到的初始值错误
 	private final String name;
-	/**值，根据属性名的不同对应不同的对象，例如ref对应的是RuntimeBeanReference*/
+	/**值，根据属性名的不同对应不同的对象，例如ref对应的是RuntimeBeanReference，value对应的是TypedStringObject*/
 	private final Object value; 
 	/**是否转换了*/
 	private boolean converted = false;
@@ -16,10 +16,18 @@ public class PropertyValue {
 		this.name = name;
 		this.value = value;
 	}
+	/***
+	 * 得到property name
+	 */
 	public String getName() {
 		return name;
 	}
 	
+	/***
+	 * 
+	 * 得到property 对应的值，根据属性名的不同对应不同的对象，
+	 * 例如ref对应的是RuntimeBeanReference, value对应的是TypedStringObject
+	 */
 	public Object getValue() {
 		return value;
 	}

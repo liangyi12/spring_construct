@@ -4,6 +4,11 @@ import java.beans.PropertyEditorSupport;
 
 import org.litespring.util.StringUtils;
 
+/**
+ * 
+ * 自定义boolean类型编辑器
+ *
+ */
 public class CustomBooleanEditor extends PropertyEditorSupport{
 	public static final String VALUE_TRUE = "true";
 	public static final String VALUE_FALSE = "false"; 

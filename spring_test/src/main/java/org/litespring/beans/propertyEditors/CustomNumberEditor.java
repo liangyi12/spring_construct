@@ -6,6 +6,11 @@ import java.text.NumberFormat;
 import org.litespring.util.NumberUtils;
 import org.litespring.util.StringUtils;
 
+/**
+ * 
+ * 自定义Number类型编辑器，支持Number及其子类
+ *
+ */
 public class CustomNumberEditor extends PropertyEditorSupport{
 	
 	private final Class<? extends Number> numberClass;

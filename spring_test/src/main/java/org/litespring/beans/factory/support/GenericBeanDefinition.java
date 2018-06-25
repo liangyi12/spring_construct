@@ -5,12 +5,8 @@ import java.util.List;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
-/**
- * 
+/** 
  * bean定义实现类
- * 
- * 
- *
  */
 public class GenericBeanDefinition implements BeanDefinition {
 	/**id:对应xml配置中的<bean id>, bean的唯一标识符*/
