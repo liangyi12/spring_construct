@@ -5,15 +5,16 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.litespring.beans.BeanDefinition;
-import org.litespring.beans.Property;
+import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
-import org.litespring.beans.factory.config.property.RunTimeReference;
-import org.litespring.beans.factory.config.property.TypedStringObject;
+import org.litespring.beans.factory.config.RuntimeBeanReference;
+import org.litespring.beans.factory.config.TypedStringValue;
 import org.litespring.util.ClassUtils;
 
 public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
@@ -42,52 +43,29 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 		if(beanDefinition.isSingleton()){
 			Object bean = this.getSingleton(beanId);
 			if(bean == null){
-				bean = initialBean(beanDefinition);
+				bean = createBean(beanDefinition);
 				this.registerSingleton(beanId, bean);
 			}
 			return bean;
 		}
-		return initialBean(beanDefinition);
-	}
-	
-	public Object initialBean(BeanDefinition beanDefinition) {
-		Object bean = createBean(beanDefinition);
-		initialProperty(bean, beanDefinition);
-		return bean;
-	}
-
-	private void initialProperty(Object bean, BeanDefinition beanDefinition) {
-		bean.getClass().getDeclaredFields();
-		try {
-			BeanInfo bi = Introspector.getBeanInfo(bean.getClass());
-			PropertyDescriptor[] pds = bi.getPropertyDescriptors();
-			for(PropertyDescriptor pd : pds) {
-				for(Property pro : beanDefinition.getProperties()) {
-					if(pd.getName().equals(pro.getName())){
-						if(pro.getActualValue() instanceof TypedStringObject){
-							pd.getWriteMethod().invoke(bean, pro.getOriginalValue());
-						}
-					}
-					if (pro.getActualValue() instanceof RunTimeReference) {
-						System.out.println(pd.getWriteMethod().getName());
-						pd.getWriteMethod().invoke(bean, getBean(pro.getOriginalValue().toString()));
-					}
-				}
-				
-			}
-		} catch (IntrospectionException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		
+		return createBean(beanDefinition);
 	}
 
 	public Object createBean(BeanDefinition beanDefinition) {
+		//创建bean实例
+		Object bean = instantiateBean(beanDefinition);
+		//设置属性
+		populateBean(beanDefinition,bean);
+		return bean;
+	}
+	
+	
+	/**
+	 * 创建bean实例
+	 * @param beanDefinition
+	 * @return
+	 */
+	public Object instantiateBean(BeanDefinition beanDefinition) {
 		ClassLoader cl = this.getBeanClassLoader();
 		String beanClassName = beanDefinition.getBeanClassName();
 		try {
@@ -95,6 +73,43 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 			return c.newInstance();
 		} catch (Exception e) {
 			throw new BeanCreationException("create bean for " + beanClassName + "failed" , e);
+		}
+	}
+	
+	/**
+	 * 设置bean属性
+	 */
+	public void populateBean(BeanDefinition beanDefinition ,Object bean) {
+		List<PropertyValue> pvs = beanDefinition.getPropertyValues();
+		if(pvs == null || pvs.isEmpty()) {
+			return;
+		}
+		BeanDefinitioValueResolver resolver = new BeanDefinitioValueResolver(this);
+		try {
+			BeanInfo bi = Introspector.getBeanInfo(bean.getClass());
+			PropertyDescriptor[] pds = bi.getPropertyDescriptors();
+			/*
+			 * 在嵌套For循环中，将循环次数多的循环放在内侧，循环次数少的循环放在外侧，其性能会更好。如果在循环次数较少的情况下，其运行效果区别不大，
+			 * 但在循环次数较多的情况下，其效果就比较明显了
+			 * */
+			for(PropertyValue pro : pvs) {
+				String propertyName = pro.getName();
+				Object originialValue = pro.getValue();
+				Object resolveValue = resolver.resolveValueIfNecessary(originialValue);
+				for(PropertyDescriptor pd : pds) {
+					if(pd.getName().equals(propertyName)) {
+						pd.getWriteMethod().invoke(bean, resolveValue);
+					}
+				}
+			}
+		} catch (IntrospectionException e1) {
+			e1.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 		}
 	}
 
