@@ -16,11 +16,12 @@ public class ApplicationContextTestV2 {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("petstore-v2.xml");
 		PetStoreService ps = (PetStoreService)ctx.getBean("petStore");
 		
-		/*assertNotNull(ps.getAccountDao());
+		assertNotNull(ps.getAccountDao());
 		
-		assertNotNull(ps.getItemDao());*/
-		//assertTrue(ps.getItemDao() instanceof ItemDao);
-		assertNotNull(ps.getTest());
+		assertNotNull(ps.getItemDao());
+		assertTrue(ps.getAccountDao() instanceof AccountDao);
+		assertTrue(ps.getItemDao() instanceof ItemDao);
+		//assertNotNull(ps.getTest());
 		}
 
 }
