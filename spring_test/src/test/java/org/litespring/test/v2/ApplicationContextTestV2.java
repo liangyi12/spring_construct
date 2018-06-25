@@ -21,7 +21,7 @@ public class ApplicationContextTestV2 {
 		assertNotNull(ps.getItemDao());
 		assertTrue(ps.getAccountDao() instanceof AccountDao);
 		assertTrue(ps.getItemDao() instanceof ItemDao);
-		//assertNotNull(ps.getTest());
+		assertEquals("test", ps.getTest());
 		}
 
 }
