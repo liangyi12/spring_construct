@@ -23,7 +23,7 @@ public class BeanDefinitionTestV2 {
 		reader.loadBeanDenifition(resource);
 		BeanDefinition bd = factory.getBeanDefinition("petStore");
 		List<PropertyValue> pvs = bd.getPropertyValues();
-		assertEquals(2, pvs.size());
+		assertEquals(5, pvs.size());
 		//为什么加了两个局部代码块， 是为了省空间吗？
 		{
 			PropertyValue pv = this.getPropertyValue("accountDao", pvs);

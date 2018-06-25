@@ -55,7 +55,7 @@ public class BeanFactoryTest {
 	@Test
 	public void testInvalidXml() {
 		try{
-			Resource resource = new ClassPathResource("petstore-v2.xml");
+			Resource resource = new ClassPathResource("petstore-v3.xml");
 			reader.loadBeanDenifition(resource);
 		}catch(BeanDefinitionStoreException e) {
 			return;

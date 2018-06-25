@@ -22,6 +22,8 @@ public class ApplicationContextTestV2 {
 		assertTrue(ps.getAccountDao() instanceof AccountDao);
 		assertTrue(ps.getItemDao() instanceof ItemDao);
 		assertEquals("test", ps.getTest());
+		assertEquals(1, ps.getVersion());
+		assertEquals(true, ps.isPower_switch());
 		}
 
 }
