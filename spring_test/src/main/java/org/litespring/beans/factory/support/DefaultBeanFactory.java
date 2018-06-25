@@ -11,6 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
+import org.litespring.beans.SimpleTypeConvert;
+import org.litespring.beans.TypeConvert;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
@@ -92,6 +94,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 			return;
 		}
 		BeanDefinitioValueResolver resolver = new BeanDefinitioValueResolver(this);
+		TypeConvert convert = new SimpleTypeConvert();
 		try {
 			BeanInfo bi = Introspector.getBeanInfo(bean.getClass());
 			PropertyDescriptor[] pds = bi.getPropertyDescriptors();
@@ -105,7 +108,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 				Object resolveValue = resolver.resolveValueIfNecessary(originialValue);
 				for(PropertyDescriptor pd : pds) {
 					if(pd.getName().equals(propertyName)) {
-						pd.getWriteMethod().invoke(bean, resolveValue);
+						Object convertValue = convert.convertIfNecessary(resolveValue, pd.getPropertyType());
+						pd.getWriteMethod().invoke(bean, convertValue);
 					}
 				}
 			}
