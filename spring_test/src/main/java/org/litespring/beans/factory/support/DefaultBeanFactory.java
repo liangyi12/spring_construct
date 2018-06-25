@@ -20,26 +20,32 @@ import org.litespring.util.ClassUtils;
 public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 	implements  ConfigurableBeanFactory, BeanDefinitionRegistry{
 	
+	/**保存beanDefinition实例的map对象，key为beanname，value为实例*/
 	private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
+	/**类加载器*/
 	private ClassLoader classLoader;
 
 	public DefaultBeanFactory() {
 	}
-
+	
+	/**注册beanDefinition*/
 	public void registerBeanDefinition(String beanId, BeanDefinition beanDefinition) {
 		this.beanDefinitionMap.put(beanId, beanDefinition);
 	}
 	
+	/**获取beanDefinition*/
 	public BeanDefinition getBeanDefinition(String beanId) {
 		return beanDefinitionMap.get(beanId);
 	}
-
+	
+	/**获取bean对象*/
 	public Object getBean(String beanId) {
 		BeanDefinition beanDefinition = getBeanDefinition(beanId);
 		if(beanDefinition == null) {
 			throw new BeanCreationException(beanId, "beanDefinition does not exist");
 		}
 		
+		//判断是否为单例对象
 		if(beanDefinition.isSingleton()){
 			Object bean = this.getSingleton(beanId);
 			if(bean == null){
@@ -50,7 +56,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 		}
 		return createBean(beanDefinition);
 	}
-
+	
+	/**创建bean对象，并为属性等赋值*/
 	public Object createBean(BeanDefinition beanDefinition) {
 		//创建bean实例
 		Object bean = instantiateBean(beanDefinition);
@@ -61,7 +68,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 	
 	
 	/**
-	 * 创建bean实例
+	 * 创建bean实例--现在使用的是默认的无参构造函数，之后可能会实现构造函数注入，在这里调用合适的构造函数
 	 * @param beanDefinition
 	 * @return
 	 */
