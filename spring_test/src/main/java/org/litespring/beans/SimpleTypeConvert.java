@@ -4,9 +4,9 @@ import java.beans.PropertyEditor;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.litespring.beans.propertyEditors.CustomBooleanEditor;
 import org.litespring.beans.propertyEditors.CustomNumberEditor;
 import org.litespring.util.ClassUtils;
-import org.litespring.util.CustomBooleanEditor;
 /**
  * 
  * 类型转换实现类
