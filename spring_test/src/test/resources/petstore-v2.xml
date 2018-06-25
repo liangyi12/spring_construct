@@ -8,6 +8,8 @@
         <property name="accountDao" ref="accountDao"/>
         <property name="itemDao" ref="itemDao" />
         <property name="test" value="test" />
+        <property name="version" value="1" />
+        <property name="power_switch" value="on" />
         
      </bean>
      
