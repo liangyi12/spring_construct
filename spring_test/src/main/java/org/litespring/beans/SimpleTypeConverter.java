@@ -12,9 +12,13 @@ import org.litespring.util.ClassUtils;
  * 类型转换实现类
  *
  */
-public class SimpleTypeConvert implements TypeConvert {
+public class SimpleTypeConverter implements TypeConverter {
 	/**存放给定类型编辑器的map，key为class*/
-	Map<Class<?>, PropertyEditor> defaultEditors;
+	private Map<Class<?>, PropertyEditor> defaultEditors;
+	
+	public SimpleTypeConverter(){
+		
+	}
 	
 	public <T> T convertIfNecessary(Object value, Class<T> requiredType)
 			throws TypeMismacthException {
@@ -58,9 +62,11 @@ public class SimpleTypeConvert implements TypeConvert {
 	 * 创建类型编辑器，并放到map中
 	 */
 	private void createDefalutEditors() {
-		defaultEditors = new HashMap<Class<?>, PropertyEditor>(64);
+		this.defaultEditors = new HashMap<Class<?>, PropertyEditor>(64);
+		
 		this.defaultEditors.put(int.class, new CustomNumberEditor(Integer.class, false));
 		this.defaultEditors.put(Integer.class, new CustomNumberEditor(Integer.class, true));
+		
 		this.defaultEditors.put(boolean.class, new CustomBooleanEditor(false));
 		this.defaultEditors.put(Boolean.class, new CustomBooleanEditor(false));
 		

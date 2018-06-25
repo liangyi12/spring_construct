@@ -6,7 +6,8 @@ package org.litespring.beans;
  *
  */
 public class TypeMismacthException extends BeansException {
-	private transient Object value; //为什么用transient
+	//为什么用transient--transient表示不能被序列化，为什么，exception什么时候序列化
+	private transient Object value; 
 	private Class<?> requiredType;
 	
 	public TypeMismacthException(Object value, Class<?> requiredType) {

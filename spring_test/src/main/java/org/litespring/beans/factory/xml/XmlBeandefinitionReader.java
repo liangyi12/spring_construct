@@ -32,11 +32,17 @@ import org.litespring.util.StringUtils;
  */
 public class XmlBeandefinitionReader {
 	public static final String ID_ATTRIBUTE = "id";
+	
 	public static final String CLASS_ATTRIBUTE = "class";
+	
 	public static final String SCOPE_ATTRIBUTE = "scope";
+	
 	public static final String PROPERTY_ELEMENT = "property";
+	
 	public static final String NAME_ATTRIBUTE = "name";
+	
 	public static final String VALUE_ATTRIBUTE = "value";
+	
 	public static final String REF_ATTRIBUTE = "ref";
 	
 	//持有一个BeanDefinitionRegistry对象
@@ -121,8 +127,10 @@ public class XmlBeandefinitionReader {
 		String elementName = (propertyName != null ?
 				"<property> element for property '" + propertyName + "'" :
 				"<constructor-arg> element");
+		
 		boolean hasRefAttribute = (e.attribute(REF_ATTRIBUTE) != null);
 		boolean hasValueAttribute = (e.attribute(VALUE_ATTRIBUTE) != null);
+		
 		if(hasRefAttribute) {
 			String refname = e.attributeValue(REF_ATTRIBUTE);
 			if(!StringUtils.hasText(refname)){

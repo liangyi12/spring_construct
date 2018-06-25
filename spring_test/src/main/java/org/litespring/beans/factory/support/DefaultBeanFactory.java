@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
-import org.litespring.beans.SimpleTypeConvert;
-import org.litespring.beans.TypeConvert;
+import org.litespring.beans.SimpleTypeConverter;
+import org.litespring.beans.TypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
@@ -94,7 +94,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 			return;
 		}
 		BeanDefinitioValueResolver resolver = new BeanDefinitioValueResolver(this);
-		TypeConvert convert = new SimpleTypeConvert();
+		TypeConverter convert = new SimpleTypeConverter();
 		try {
 			BeanInfo bi = Introspector.getBeanInfo(bean.getClass());
 			PropertyDescriptor[] pds = bi.getPropertyDescriptors();
@@ -111,17 +111,13 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 						Object convertValue = convert.convertIfNecessary(resolveValue, pd.getPropertyType());
 						//pd.getWriteMethod() 得到属性的set方法
 						pd.getWriteMethod().invoke(bean, convertValue);
+						break;
 					}
 				}
 			}
-		} catch (IntrospectionException e1) {
-			e1.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+		} catch (Exception ex) {
+			//还是不习惯处理exception，得改
+			throw new BeanCreationException("Failed to obtain BeanInfo for class [" + beanDefinition.getBeanClassName() + "]", ex);
 		}
 	}
 

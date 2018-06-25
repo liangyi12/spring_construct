@@ -6,15 +6,15 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.litespring.beans.SimpleTypeConvert;
-import org.litespring.beans.TypeConvert;
+import org.litespring.beans.SimpleTypeConverter;
+import org.litespring.beans.TypeConverter;
 import org.litespring.beans.TypeMismacthException;
 
 public class TypeConvertTest {
 
 	@Test
 	public void testConverStringToInt() {
-		TypeConvert convert  = new SimpleTypeConvert();
+		TypeConverter convert  = new SimpleTypeConverter();
 		Integer i = convert.convertIfNecessary("3",Integer.class);
 		assertEquals(3, i.intValue());
 		
@@ -28,7 +28,7 @@ public class TypeConvertTest {
 	
 	@Test
 	public void testConvertStringToBoolean() {
-		TypeConvert convert  = new SimpleTypeConvert();
+		TypeConverter convert  = new SimpleTypeConverter();
 		boolean b = convert.convertIfNecessary("1", boolean.class);
 		assertEquals(true, b);
 		try{
@@ -41,14 +41,14 @@ public class TypeConvertTest {
 	
 	@Test
 	public void testConvertStringToString() {
-		TypeConvert convert  = new SimpleTypeConvert();
+		TypeConverter convert  = new SimpleTypeConverter();
 		String s = convert.convertIfNecessary("test", String.class);
 		assertEquals("test",s);
 	}
 	
 	@Test
 	public void testInvalidConvert() {
-		TypeConvert convert  = new SimpleTypeConvert();
+		TypeConverter convert  = new SimpleTypeConverter();
 		try{
 			convert.convertIfNecessary("123", List.class);
 		}catch(RuntimeException e) {

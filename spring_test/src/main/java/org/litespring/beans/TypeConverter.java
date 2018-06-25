@@ -5,7 +5,7 @@ package org.litespring.beans;
  * 类型转换接口
  *
  */
-public interface TypeConvert {
+public interface TypeConverter {
 	
 	/***类型转换方法
 	 * 如果需要则进行类型转换，当value的类型就是requiredType的时候不需要转换，直接返回。

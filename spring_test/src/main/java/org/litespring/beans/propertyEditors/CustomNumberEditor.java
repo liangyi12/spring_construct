@@ -39,9 +39,11 @@ public class CustomNumberEditor extends PropertyEditorSupport{
 	public void setAsText(String text) throws IllegalArgumentException {
 		if(this.allowEmpty && !StringUtils.hasText(text)) {
 			setValue(null);
-		}else if(this.numberFormat != null) {
+		}
+		else if(this.numberFormat != null) {
 			setValue(NumberUtils.parseNumber(text, this.numberClass, this.numberFormat));
-		}else{
+		}
+		else{
 			setValue(NumberUtils.parseNumber(text, this.numberClass));
 		}
 	}
@@ -60,9 +62,12 @@ public class CustomNumberEditor extends PropertyEditorSupport{
 		Object value = getValue();
 		if(value == null){
 			return "";
-		}else if(this.numberFormat != null){
+		}
+		
+		if(this.numberFormat != null){
 			return this.numberFormat.format(value);
-		}else{
+		}
+		else{
 			return value.toString();
 		}
 	}

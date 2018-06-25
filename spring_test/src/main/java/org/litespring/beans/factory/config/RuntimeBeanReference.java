@@ -10,7 +10,6 @@ public class RuntimeBeanReference {
 	private final String beanName;
 	
 	public RuntimeBeanReference(String beanName) {
-		super();
 		this.beanName = beanName;
 	}
 
