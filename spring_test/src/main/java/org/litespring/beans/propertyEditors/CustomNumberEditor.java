@@ -8,7 +8,7 @@ import org.litespring.util.StringUtils;
 
 /**
  * 
- * 自定义Number类型编辑器，支持Number及其子类
+ * 给定一个字符串可以转换成一个数字
  *
  */
 public class CustomNumberEditor extends PropertyEditorSupport{

@@ -6,7 +6,7 @@ import org.litespring.util.StringUtils;
 
 /**
  * 
- * 自定义boolean类型编辑器
+ * 给一个字符串可以转换成boolean值
  *
  */
 public class CustomBooleanEditor extends PropertyEditorSupport{
