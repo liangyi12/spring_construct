@@ -6,7 +6,8 @@ package org.litespring.beans;
  *
  */
 public class TypeMismacthException extends BeansException {
-	//为什么用transient--transient表示不能被序列化，为什么，exception什么时候序列化
+	//为什么用transient--transient表示不能被序列化，Object没有实现serializable接口，是不能被序列化的
+	//为什么有的变量不能被实例化：1.设计者没有实现serializable。 2，动态数据只可以在执行时求出而不能或不必存储
 	private transient Object value; 
 	private Class<?> requiredType;
 	
