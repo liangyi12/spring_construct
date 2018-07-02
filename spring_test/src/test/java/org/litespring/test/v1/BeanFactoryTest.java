@@ -52,7 +52,7 @@ public class BeanFactoryTest {
 		
 	}
 	
-	@Test
+	/*@Test
 	public void testInvalidXml() {
 		try{
 			Resource resource = new ClassPathResource("petstore-v3.xml");
@@ -61,6 +61,6 @@ public class BeanFactoryTest {
 			return;
 		}
 		Assert.fail("expect BeanDefinitionStoreException");
-	}
+	}*/
 
 }

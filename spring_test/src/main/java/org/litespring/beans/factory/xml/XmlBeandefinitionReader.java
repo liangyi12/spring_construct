@@ -15,6 +15,7 @@ import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.ConstructorArgument;
 import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
@@ -45,6 +46,10 @@ public class XmlBeandefinitionReader {
 	
 	public static final String REF_ATTRIBUTE = "ref";
 	
+	public static final String CONSTRUCTOR_ARG_ELEMENT = "constructor-arg";
+	
+	public static final String TYPE_ATTRIBUTE = "type";
+	
 	//持有一个BeanDefinitionRegistry对象
 	BeanDefinitionRegistry registry;
 	protected final Log logger = LogFactory.getLog(getClass());
@@ -74,7 +79,8 @@ public class XmlBeandefinitionReader {
 				if(ele.attributeValue(SCOPE_ATTRIBUTE) != null) {
 					bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
 				}
-				ParsePropertyElement(ele,bd);
+				parsePropertyElement(ele,bd);
+				parseConstructArgElements(ele,bd);
 				
 				this.registry.registerBeanDefinition(id, bd);	
 			}
@@ -93,12 +99,44 @@ public class XmlBeandefinitionReader {
 	}
 	
 	/**
+	 * 解析bean下所有constructor-arg子元素
+	 * @param ele
+	 * @param bd
+	 */
+	public  void parseConstructArgElements(Element ele, BeanDefinition bd) {
+		Iterator iter = ele.elementIterator(CONSTRUCTOR_ARG_ELEMENT);
+		while(iter.hasNext()){
+			parseConstructArgElement((Element)iter.next(), bd);
+		}
+	}
+	
+	/**
+	 * 解析单个constructor-arg元素
+	 * @param ele
+	 * @param bd
+	 */
+	public void parseConstructArgElement(Element ele, BeanDefinition bd) {
+		String type = ele.attributeValue(TYPE_ATTRIBUTE);
+		String name = ele.attributeValue(NAME_ATTRIBUTE);
+		Object value = parsePropertyValue(ele, bd, null);
+		ConstructorArgument.ValueHolder valueHolder  = new ConstructorArgument.ValueHolder(value);
+		if(StringUtils.hasLength(type)){
+			valueHolder.setType(type);
+		}
+		if(StringUtils.hasLength(name)){
+			valueHolder.setName(name);
+		}
+		bd.getConstructorArgument().addArgumentValue(valueHolder);
+		
+	}
+
+	/**
 	 * 解析bean元素的property子元素
 	 * @param beanEle
 	 * @param bd
 	 */
-	public void ParsePropertyElement(Element beanEle, BeanDefinition bd) {
-		Iterator iter = beanEle.elementIterator();
+	public void parsePropertyElement(Element beanEle, BeanDefinition bd) {
+		Iterator iter = beanEle.elementIterator(PROPERTY_ELEMENT);
 		while(iter.hasNext()) {
 			Element e = (Element) iter.next();
 			String propertyName = e.attributeValue(NAME_ATTRIBUTE);
