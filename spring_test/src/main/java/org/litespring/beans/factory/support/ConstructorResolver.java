@@ -15,7 +15,6 @@ import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * 解析构造器注入，并根据对应的构造器新建实例
- * @author liyanli
  *
  */
 public class ConstructorResolver {
@@ -31,24 +30,27 @@ public class ConstructorResolver {
 	}
 	/**
 	 * 自动装配构造器，并根据构造器和参数新建实例
-	 * @param bd bean定义
+	 * @param bd bean定义，使用final，不能将bd指向别的BeanDefinition
 	 * @return
 	 */
 	public Object autowireConstructor(final BeanDefinition bd){
 		Constructor<?> constructorToUse =  null;
 		Object[] argsToUse = null;
 		Class beanClass = null;
+		
 		try {
 			//效率不高，高效率方法：在beanDefinition中缓存，之后从缓存里拿
 			beanClass = this.factory.getBeanClassLoader().loadClass(bd.getBeanClassName());
 		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+			throw new BeanCreationException(bd.getID() + " Instantiation of bean failed, can't resolve class", e);
 		}
+		
 		
 		Constructor<?>[] candidates = beanClass.getConstructors();
 		BeanDefinitioValueResolver resolver = new BeanDefinitioValueResolver(this.factory);
 		TypeConverter convert = new SimpleTypeConverter();
 		ConstructorArgument  cargs = bd.getConstructorArgument();
+		
 		for(int i=0; i < candidates.length; i++) {
 			Class[] parameterTypes = candidates[i].getParameterTypes();
 			//如果参数个数和构造函数形参个数不一致，则进入下一次循环
@@ -57,6 +59,7 @@ public class ConstructorResolver {
 			}
 			//每次都新建数组，如果找到合适的构造函数，会把参数值加到数组里
 			argsToUse = new Object[parameterTypes.length];
+			
 			boolean result = this.isSuitableConstructor(parameterTypes, cargs.getArgumentValues(), argsToUse, resolver, convert);
 			if (result) {
 				constructorToUse = candidates[i];
@@ -83,14 +86,24 @@ public class ConstructorResolver {
 	 * @param convert	类型转换
 	 * @return
 	 */
-	public boolean isSuitableConstructor(Class[] parameterTypes, List<ValueHolder> valueHolders,Object[] argsToUse, 
-			BeanDefinitioValueResolver resolver,TypeConverter convert) {
+	public boolean isSuitableConstructor(Class[] parameterTypes,
+			List<ConstructorArgument.ValueHolder> valueHolders,
+			Object[] argsToUse, 
+			BeanDefinitioValueResolver resolver,
+			TypeConverter convert) {
+		
 		for (int i=0; i < parameterTypes.length; i++) {
-			Object value = valueHolders.get(i).getValue();
+			ConstructorArgument.ValueHolder valueHolder = valueHolders.get(i);
+			////获取参数的值，可能是TypedStringValue, 也可能是RuntimeBeanReference
+			Object originalValue = valueHolder.getValue();
 			try{
-				Object resolver_object = resolver.resolveValueIfNecessary(value);
-				Object convert_object = convert.convertIfNecessary(resolver_object, parameterTypes[i]);
-				argsToUse[i] = convert_object;
+				//获得真正的值
+				Object resolverValue = resolver.resolveValueIfNecessary(originalValue);
+				//如果参数类型是 int, 但是值是字符串,例如"3",还需要转型
+				//如果转型失败，则抛出异常。说明这个构造函数不可用
+				Object convertedValue = convert.convertIfNecessary(resolverValue, parameterTypes[i]);
+				//转型成功，记录下来
+				argsToUse[i] = convertedValue;
 			}catch(Exception e) {
 				logger.error(e);
 				return false;

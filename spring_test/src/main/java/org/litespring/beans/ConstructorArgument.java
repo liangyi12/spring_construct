@@ -43,6 +43,13 @@ public class ConstructorArgument {
 	}
 	
 	/**
+	 * Clear this holder, removing all argument values.
+	 */
+	public void clear() {
+		this.argumentValues.clear();
+	}
+	
+	/**
 	 * 得到注入的参数个数
 	 * @return
 	 */
@@ -60,6 +67,7 @@ public class ConstructorArgument {
 	
 	
 	/**
+	 * Holder为构造函数参数值，带有一个可选的类型属性，指示实际构造函数参数的目标类型。<br/>
 	 * 构造器参数类<br/>
 	 * 使用静态内部类：高内聚，只在ConstructorArgument中使用
 	 * @author liyanli

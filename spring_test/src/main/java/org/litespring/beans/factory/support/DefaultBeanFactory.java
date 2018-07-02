@@ -70,7 +70,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 	
 	
 	/**
-	 * 创建bean实例--现在使用的是默认的无参构造函数，之后可能会实现构造函数注入，在这里调用合适的构造函数
+	 * 创建bean实例
 	 * @param beanDefinition
 	 * @return
 	 */

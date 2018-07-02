@@ -79,9 +79,8 @@ public class XmlBeandefinitionReader {
 				if(ele.attributeValue(SCOPE_ATTRIBUTE) != null) {
 					bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
 				}
-				parsePropertyElement(ele,bd);
 				parseConstructArgElements(ele,bd);
-				
+				parsePropertyElement(ele,bd);
 				this.registry.registerBeanDefinition(id, bd);	
 			}
 		} catch (Exception e) {

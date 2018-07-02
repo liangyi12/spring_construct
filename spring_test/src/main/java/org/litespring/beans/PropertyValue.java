@@ -2,7 +2,6 @@ package org.litespring.beans;
 
 /**
  * 属性类
- * @author liyanli
  *
  */
 public class PropertyValue {
