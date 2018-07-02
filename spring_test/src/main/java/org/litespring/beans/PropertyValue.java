@@ -1,5 +1,10 @@
 package org.litespring.beans;
 
+/**
+ * 属性类
+ * @author liyanli
+ *
+ */
 public class PropertyValue {
 	//为什么用final--是因为name和value 只能在xml或是注解中设定，然后由构造函数初始化值，这之后不能再修改？
 	//假设场景：在spring框架把所有的类都注入之后，程序使用之前，有人从beandefinition中得到了某个bean的属性列表，修改了其中一个，如果修改的是name的话，
