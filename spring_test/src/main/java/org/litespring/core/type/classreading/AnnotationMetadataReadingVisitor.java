@@ -33,7 +33,7 @@ public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisito
 		return new AnnotationAttributesReadingVisitor(className, this.attributeMap);
 	}
 	
-	public Set getAnnotationSet() {
+	public Set getAnnotationTypes() {
 		return this.annotationSet;
 	}
 	
