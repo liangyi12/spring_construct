@@ -35,6 +35,20 @@ import java.util.Set;
  * @see ReflectionUtils
  */
 public abstract class ClassUtils {
+	
+
+	/** The package separator character: '.' */
+	private static final char PACKAGE_SEPARATOR = '.';
+
+	/** The path separator character: '/' */
+	private static final char PATH_SEPARATOR = '/';
+	
+	/** The inner class separator character: '$' */
+	private static final char INNER_CLASS_SEPARATOR = '$';
+	
+	/** The CGLIB class separator: "$$" */
+	public static final String CGLIB_CLASS_SEPARATOR = "$$";
+	
 	/**
 	 * Map with primitive wrapper type as key and corresponding primitive
 	 * type as value, for example: Integer.class -> int.class.
@@ -181,6 +195,44 @@ public abstract class ClassUtils {
 	public static boolean isAssignableValue(Class<?> type, Object value) {
 		Assert.notNull(type, "Type must not be null");
 		return (value != null ? isAssignable(type, value.getClass()) : !type.isPrimitive());
+	}
+	
+	/**
+	 * Convert a "."-based fully qualified class name to a "/"-based resource path.
+	 * @param className the fully qualified class name
+	 * @return the corresponding resource path, pointing to the class
+	 */
+	public static String convertClassNameToResourcePath(String className) {
+		Assert.notNull(className, "Class name must not be null");
+		return className.replace(PACKAGE_SEPARATOR, PATH_SEPARATOR);
+	}
+	
+	/**
+	 * Convert a "/"-based resource path to a "."-based fully qualified class name.
+	 * @param resourcePath the resource path pointing to a class
+	 * @return the corresponding fully qualified class name
+	 */
+	public static String convertResourcePathToClassName(String resourcePath) {
+		Assert.notNull(resourcePath, "Resource path must not be null");
+		return resourcePath.replace(PATH_SEPARATOR, PACKAGE_SEPARATOR);
+	}
+	
+	/**
+	 * Get the class name without the qualified package name.
+	 * @param className the className to get the short name for
+	 * @return the class name of the class without the package name
+	 * @throws IllegalArgumentException if the className is empty
+	 */
+	public static String getShortName(String className) {
+		Assert.hasLength(className, "Class name must not be empty");
+		int lastDotIndex = className.lastIndexOf(PACKAGE_SEPARATOR);
+		int nameEndIndex = className.indexOf(CGLIB_CLASS_SEPARATOR);
+		if (nameEndIndex == -1) {
+			nameEndIndex = className.length();
+		}
+		String shortName = className.substring(lastDotIndex + 1, nameEndIndex);
+		shortName = shortName.replace(INNER_CLASS_SEPARATOR, PACKAGE_SEPARATOR);
+		return shortName;
 	}
 
 }
