@@ -31,10 +31,20 @@ public class GenericBeanDefinition implements BeanDefinition {
 	}
 	
 	
+	public GenericBeanDefinition() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public String getBeanClassName() {
 		return this.beanClassName;
 	}
 	
+	public void setBeanClassName(String beanClassName) {
+		this.beanClassName = beanClassName;
+	}
+
+
 	public boolean isSingleton() {
 		return this.scope.equals(SCOPE_SINGLETON) || this.scope.equals(SCOPE_DEFAULT);
 	}
@@ -62,6 +72,16 @@ public class GenericBeanDefinition implements BeanDefinition {
 	public String getID() {
 		return this.id;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 
 	public boolean hasConstructorArgumentValues() {
 		return !this.constructorArgument.isEmpty();

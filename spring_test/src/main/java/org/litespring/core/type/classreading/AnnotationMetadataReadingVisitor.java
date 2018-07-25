@@ -14,6 +14,9 @@ import org.springframework.asm.Type;
  * 
  * a visitor to visit the annotation of the class
  * 访问类的注解的visitor，继承自ClassMetadataReadingVisitor
+ * 
+ * ASM class visitor which looks for the class name and implemented types as well as 
+ * for the annotations defined on the class, exposing them through the AnnotationMetadata interface.
  *
  */
 public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor implements AnnotationMetadata{
