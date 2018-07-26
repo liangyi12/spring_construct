@@ -3,6 +3,7 @@ package org.litespring.beans.factory.annotation;
 import java.lang.reflect.Field;
 
 import org.litespring.beans.factory.BeanCreationException;
+import org.litespring.beans.factory.config.AutowireCapableBeanFactory;
 import org.litespring.beans.factory.config.DependencyDescriptor;
 import org.litespring.beans.factory.support.DefaultBeanFactory;
 import org.litespring.util.ReflectionUtils;
@@ -15,7 +16,7 @@ public class AutowiredFieldElement extends InjectedElement {
 	
 	private boolean required;
 
-	public AutowiredFieldElement(Field f, boolean required, DefaultBeanFactory factory) {
+	public AutowiredFieldElement(Field f, boolean required, AutowireCapableBeanFactory factory) {
 		super(f,factory);
 		this.required = required;
 	}

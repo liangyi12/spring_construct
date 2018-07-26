@@ -1,5 +1,7 @@
 package org.litespring.context.support;
 
+import org.litespring.beans.factory.annotation.AutowiredAnnotationProcessor;
+import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.beans.factory.support.DefaultBeanFactory;
 import org.litespring.beans.factory.xml.XmlBeandefinitionReader;
 import org.litespring.context.ApplicationContext;
@@ -23,6 +25,7 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 		Resource resource = getResourceByPath(configFile);
 		reader.loadBeanDenifition(resource);
 		factory.setBeanClassLoader(classLoader);
+		registerBeanPostProcessors(factory);
 	}
 	
 	/**根据路径得到resource，因相对于文件路径与项目classpath等有多种不同实现，故抽象出来，由相应的子类实现本方法*/
@@ -38,6 +41,12 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
 
 	public ClassLoader getBeanClassLoader() {
 		return this.classLoader;
+	}
+	
+	protected void registerBeanPostProcessors(ConfigurableBeanFactory beanFactory) {
+		AutowiredAnnotationProcessor postProcessor = new AutowiredAnnotationProcessor();
+		postProcessor.setBeanFactory(beanFactory);
+		beanFactory.addBeanPostProcessor(postProcessor);
 	}
 	
 	

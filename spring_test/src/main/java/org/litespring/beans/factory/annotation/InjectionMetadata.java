@@ -17,7 +17,11 @@ public class InjectionMetadata {
 		this.targetClass = targetClass;
 		this.injectedElements = injectedElements;
 	}
-	
+
+	public List<InjectedElement> getInjectedElements() {
+		return injectedElements;
+	}
+
 	/**
 	 * 注入
 	 * @param target
