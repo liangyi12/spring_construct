@@ -24,6 +24,8 @@ public class GenericBeanDefinition implements BeanDefinition {
 	
 	private ConstructorArgument constructorArgument = new ConstructorArgument();
 	
+	private Class beanClass;
+	
 	/**构造函数*/
 	public GenericBeanDefinition(String id, String beanClassName) {
 		this.id = id;
@@ -85,6 +87,31 @@ public class GenericBeanDefinition implements BeanDefinition {
 
 	public boolean hasConstructorArgumentValues() {
 		return !this.constructorArgument.isEmpty();
+	}
+
+
+	public Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException {
+		String beanName = getBeanClassName();
+		if (beanName == null) {
+			return null;
+		}
+		Class<?> resolvedClass = classLoader.loadClass(this.beanClassName);
+		this.beanClass = resolvedClass;
+		return resolvedClass;
+	}
+
+	//做了一个约定，在调用getBeanClass 之前，必须调用resolveBeanClass
+	public Class<?> getBeanClass() throws IllegalStateException{
+		if (this.beanClass == null) {
+			throw new IllegalStateException(
+					"Bean class name [" + this.getBeanClassName() + "] has not been resolved into an actual Class");
+		}
+		return this.beanClass;
+	}
+
+
+	public boolean hasBeanClass() {
+		return this.beanClass != null;
 	}
 	
 	

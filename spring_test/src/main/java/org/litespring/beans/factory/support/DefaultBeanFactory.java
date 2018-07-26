@@ -5,6 +5,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +16,7 @@ import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.TypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
+import org.litespring.beans.factory.config.DependencyDescriptor;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
 import org.litespring.beans.factory.config.TypedStringValue;
 import org.litespring.util.ClassUtils;
@@ -133,6 +135,34 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 
 	public ClassLoader getBeanClassLoader() {
 		return (this.classLoader != null ? this.classLoader : ClassUtils.getDefaultClassLoader());
+	}
+	
+	
+	public Object resolveDependency(DependencyDescriptor descriptor){
+		Collection<BeanDefinition>  beanDefinitionList = this.beanDefinitionMap.values();
+		Class typeToMatch  =  descriptor.getDependencyType();
+		for (BeanDefinition bd : beanDefinitionList) {
+			//确保BeanDefinition 有Class对象
+			this.resolveBeanClass(bd);
+			//isAssignableFrom(Class<?> cls)  判定此 Class 对象所表示的类或接口与指定的 Class 参数所表示的类或接口是否相同，或是否是其超类或超接口。
+			if (typeToMatch.isAssignableFrom(bd.getBeanClass())) {
+				return this.getBean(bd.getID());
+			}
+			
+		}
+		return null;
+	}
+	
+	public void resolveBeanClass(BeanDefinition bd) {
+		if (bd.hasBeanClass()){
+			return;
+		}else{
+			try {
+				bd.resolveBeanClass(this.getBeanClassLoader());
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	

@@ -64,5 +64,21 @@ public interface BeanDefinition {
 	 */
 	public boolean hasConstructorArgumentValues();
 	
+	/**
+	 * Determine the class of the wrapped bean, resolving it from a specified class name if necessary.
+	 * @param classLoader
+	 * @return
+	 * @throws ClassNotFoundException 
+	 */
+	public Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException;
+	
+	/**
+	 * Return the class of the wrapped bean, if already resolved.
+	 * @return
+	 */
+	public Class<?> getBeanClass();
+	
+	public boolean hasBeanClass();
+	
 	
 }
