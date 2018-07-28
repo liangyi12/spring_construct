@@ -14,6 +14,7 @@ import org.litespring.beans.PropertyValue;
 import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.TypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
+import org.litespring.beans.factory.NoSuchBeanDefinitionException;
 import org.litespring.beans.factory.annotation.AutowiredAnnotationProcessor;
 import org.litespring.beans.factory.config.BeanPostProcessor;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
@@ -180,6 +181,15 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public Class<?> getType(String beanName) throws NoSuchBeanDefinitionException{
+		BeanDefinition bd = getBeanDefinition(beanName);
+		if (bd == null) {
+			throw new NoSuchBeanDefinitionException(beanName);
+		}
+		resolveBeanClass(bd);
+		return bd.getBeanClass();
 	}
 
 	
